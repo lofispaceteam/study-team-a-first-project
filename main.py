@@ -5,7 +5,10 @@ from models import User
 from database import Base, engine, get_db
 from passlib.context import CryptContext
 
+Base.metadata.create_all(bind=engine)
 app = FastAPI()
+
+pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
 class UserCreate(BaseModel):
     first_name: str
