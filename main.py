@@ -28,3 +28,14 @@ def register(user: UserCreate, db: Session = Depends(get_db)):
     existing_user = db.query(User).filter(User.email == user.email).first()
     if existing_user:
         raise HTTPException(status_code = 400, detail = "Пользователь с такой почтой уже существует!") #Для Frontend! detail - вывести если пользователь с такой почтой существует.
+    
+    new_user = User(
+        first_name = user.first_name,
+        last_name = user.last_name,
+        email = user.email,
+        password = user.password,
+        password_hash = pwd_context.hash(user.password)
+    )
+
+    db.add(new_user)
+    db.commit()
