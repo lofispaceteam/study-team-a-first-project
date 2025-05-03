@@ -1,5 +1,9 @@
-from fastapi import FastAPI
-from pydantic import BaseModel, EmailStr, model_validator, ValidationError
+from fastapi import FastAPI, Depends, HTTPException
+from pydantic import BaseModel, EmailStr
+from sqlalchemy.orm import Session
+from models import User
+from database import Base, engine, get_db
+from passlib.context import CryptContext
 
 app = FastAPI()
 
