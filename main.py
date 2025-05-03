@@ -22,3 +22,5 @@ class UserCreate(BaseModel):
 def register(user: UserCreate, db: Session = Depends(get_db)):
     if user.password != user.confirm_password:
         raise HTTPException(status_code = 400, detail = "Пароли не совпадают!") #Для Frontend! detail - вывести если не совпадают пароли.
+    if len(user.password) < 8:
+        raise HTTPException(status_code = 400, detail = "Пароль меньше 8 символов!") #Для Frontend! detail - вывести если короткий пароль.
