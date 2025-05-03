@@ -18,11 +18,7 @@ class UserCreate(BaseModel):
     password: str
     confirm_password: str
 
-    #Не доделано!
-    @model_validator(mode='before')
-    def check_password_length(cls, v):
-        password = v.get('password')
-        if len(password) < 8:
-            raise ValueError('Длина пароля меньше 8 символов!')
-        return v
-    #Не доделано!
+@app.post('/register')
+def register(user: UserCreate, db: Session = Depends(get_db)):
+    if user.password != user.confirm_password:
+        raise HTTPException(status_code = 400, detail = "Пароли не совпадают!") #Для Frontend! detail - вывести если не совпадают пароли.
