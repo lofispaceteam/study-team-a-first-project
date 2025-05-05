@@ -18,6 +18,10 @@ class UserCreate(BaseModel):
     password: str
     confirm_password: str
 
+class UserLogin(BaseModel):
+    email: EmailStr
+    password: str
+
 @app.post('/register')
 def register(user: UserCreate, db: Session = Depends(get_db)):
     if user.password != user.confirm_password:
