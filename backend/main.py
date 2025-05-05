@@ -1,14 +1,22 @@
-from fastapi import FastAPI, Depends, HTTPException, Response
+from fastapi import FastAPI, Depends, HTTPException, 
 from pydantic import BaseModel, EmailStr
 from sqlalchemy.orm import Session
 from models import User
 from database import Base, engine, get_db
 from passlib.context import CryptContext
+from dotenv import load_dotenv
+import os
+from jose import jwt
+
+load_dotenv()
+
+SECRET_KEY = os.getenv("SECRET_KEY")
+ALGORITHM = "HS256"
+
+pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
 Base.metadata.create_all(bind=engine)
 app = FastAPI()
-
-pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
 class UserCreate(BaseModel):
     first_name: str
@@ -47,7 +55,7 @@ def register(user: UserCreate, db: Session = Depends(get_db)):
     db.add(new_user)
     db.commit()
 
-    return Response(status_code = 201)
+    return 
 
 @app.post("/login")
 def login(user: UserLogin, db: Session = Depends(get_db)):
