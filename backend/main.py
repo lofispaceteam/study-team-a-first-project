@@ -68,13 +68,13 @@ def get_current_user(token: str = Depends(oauth2_scheme), db: Session = Depends(
 @app.post('/register')
 def register(user: UserCreate, db: Session = Depends(get_db)):
     if user.password != user.confirm_password:
-        raise HTTPException(status_code = 400, detail = "Пароли не совпадают!") #Для Frontend! detail - вывести если не совпадают пароли.
+        raise HTTPException(status_code = 422, detail = "Пароли не совпадают!") #Для Frontend! detail - вывести если не совпадают пароли.
     if len(user.password) < 8:
-        raise HTTPException(status_code = 400, detail = "Пароль меньше 8 символов!") #Для Frontend! detail - вывести если короткий пароль.
+        raise HTTPException(status_code = 422, detail = "Пароль меньше 8 символов!") #Для Frontend! detail - вывести если короткий пароль.
     
     existing_user = db.query(User).filter(User.email == user.email).first()
     if existing_user:
-        raise HTTPException(status_code = 400, detail = "Пользователь с такой почтой уже существует!") #Для Frontend! detail - вывести если пользователь с такой почтой существует.
+        raise HTTPException(status_code = 409, detail = "Пользователь с такой почтой уже существует!") #Для Frontend! detail - вывести если пользователь с такой почтой существует.
     
     new_user = User(
         first_name = user.first_name,
@@ -93,7 +93,7 @@ def register(user: UserCreate, db: Session = Depends(get_db)):
 def login(user: UserLogin, db: Session = Depends(get_db)):
     db_user = db.query(User).filter(User.email == user.email).first()
     if not db_user or not verify_password(user.password, db_user.password_hash):
-        raise HTTPException(status_code=400, detail="Неверная почта или пароль")
+        raise HTTPException(status_code=401, detail="Неверная почта или пароль")
     
     token = jwt.encode({"sub": user.email}, SECRET_KEY, algorithm=ALGORITHM)
     return {"access_token": token, "token_type": "bearer"}
