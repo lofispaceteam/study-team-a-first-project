@@ -1,4 +1,5 @@
-from fastapi import FastAPI, Depends, HTTPException 
+from fastapi import FastAPI, Depends, HTTPException
+from fastapi.security import OAuth2PasswordBearer 
 from pydantic import BaseModel, EmailStr
 from sqlalchemy.orm import Session
 from models import User
@@ -6,7 +7,8 @@ from database import Base, engine, get_db
 from passlib.context import CryptContext
 from dotenv import load_dotenv
 import os
-from jose import jwt
+from jose import jwt, JWTError
+from datetime import datetime, timedelta
 
 load_dotenv()
 
@@ -35,6 +37,12 @@ def hash_password(password: str) -> str:
 
 def verify_password(plain_password: str, hashed_password: str) -> bool:
     return pwd_context.verify(plain_password, hashed_password)
+
+def create_access_token(data: dict, expires_delta: timedelta = None):
+    to_encode = data.copy()
+    expire = datetime.utcnow() + (expires_delta or timedelta(minutes=15))
+    to_encode.update({"exp": expire})
+    return jwt.encode(to_encode, SECRET_KEY, algorithm=ALGORITHM)
 
 @app.post('/register')
 def register(user: UserCreate, db: Session = Depends(get_db)):
