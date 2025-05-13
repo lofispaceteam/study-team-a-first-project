@@ -11,6 +11,7 @@ from jose import jwt, JWTError
 from datetime import datetime, timedelta
 import shutil
 import uuid
+from typing import Optional
 
 load_dotenv()
 
@@ -34,6 +35,15 @@ class UserCreate(BaseModel):
     phone_number: str
     password: str
     confirm_password: str
+
+class UserUpdate(BaseModel):
+    first_name: Optional[str]
+    last_name: Optional[str]
+    phone_number: Optional[str]
+    
+    current_password: Optional[str]
+    new_password: Optional[str]
+    confirm_new_password: Optional[str]
 
 class UserLogin(BaseModel):
     email: EmailStr
