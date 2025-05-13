@@ -1,4 +1,4 @@
-from fastapi import FastAPI, Depends, HTTPException, status
+from fastapi import FastAPI, Depends, HTTPException, status, File, UploadFile``
 from fastapi.security import OAuth2PasswordBearer 
 from pydantic import BaseModel, EmailStr
 from sqlalchemy.orm import Session
@@ -9,6 +9,8 @@ from dotenv import load_dotenv
 import os
 from jose import jwt, JWTError
 from datetime import datetime, timedelta
+import shutil
+import uuid
 
 load_dotenv()
 
