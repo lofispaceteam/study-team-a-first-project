@@ -10,3 +10,4 @@ class User(Base):
     email = Column(String, unique = True, index = True, nullable = False)
     phone_number = Column(String, unique = True, nullable = False)
     password_hash = Column(String, nullable = False)
+    photo_url = Column(String, nullable = True)
