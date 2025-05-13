@@ -80,7 +80,7 @@ def get_current_user(token: str = Depends(oauth2_scheme), db: Session = Depends(
         raise credentials_exception
     return user
 
-@app.post('/register')
+@app.post('/register', status_code = 201)
 def register(user: UserCreate, db: Session = Depends(get_db)):
     if user.password != user.confirm_password:
         raise HTTPException(status_code = 422, detail = "Пароли не совпадают!") #Для Frontend! detail - вывести если не совпадают пароли.
@@ -102,8 +102,6 @@ def register(user: UserCreate, db: Session = Depends(get_db)):
     db.add(new_user)
     db.commit()
 
-    return 
-
 @app.post("/login")
 def login(user: UserLogin, db: Session = Depends(get_db)):
     db_user = db.query(User).filter(User.email == user.email).first()
@@ -113,7 +111,7 @@ def login(user: UserLogin, db: Session = Depends(get_db)):
     token = jwt.encode({"sub": user.email}, SECRET_KEY, algorithm=ALGORITHM)
     return {"access_token": token, "token_type": "bearer"}
 
-@app.post("/upload-photo")
+@app.post("/upload-photo", status_code = 201)
 def upload_photo(
     file: UploadFile = File(...),
     current_user: User = Depends(get_current_user),
@@ -130,7 +128,7 @@ def upload_photo(
     current_user.photo_path = file_path
     db.commit()
 
-    return
+    return {"detail": "Фото успешно загружено"}
 
 @app.get("/me")
 def get_profile(current_user: User = Depends(get_current_user)):
