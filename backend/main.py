@@ -141,3 +141,34 @@ def get_profile(current_user: User = Depends(get_current_user)):
         "phone_number": current_user.phone_number,
         "photo_path": current_user.photo_path
     }
+
+@app.put("/me", status_code=200)
+def update_profile(
+    user_update: UserUpdate,
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user)
+):
+    # Обновление основного профиля
+    if user_update.first_name is not None:
+        current_user.first_name = user_update.first_name
+    if user_update.last_name is not None:
+        current_user.last_name = user_update.last_name
+    if user_update.phone_number is not None:
+        current_user.phone_number = user_update.phone_number
+
+    # Смена пароля
+    if user_update.new_password or user_update.confirm_new_password:
+        if not user_update.current_password:
+            raise HTTPException(status_code=400, detail="Требуется текущий пароль")
+        if not verify_password(user_update.current_password, current_user.password_hash):
+            raise HTTPException(status_code=401, detail="Неверный текущий пароль")
+        if user_update.new_password != user_update.confirm_new_password:
+            raise HTTPException(status_code=400, detail="Новые пароли не совпадают")
+        if len(user_update.new_password) < 8:
+            raise HTTPException(status_code=400, detail="Новый пароль должен быть не менее 8 символов")
+
+        current_user.password_hash = hash_password(user_update.new_password)
+
+    db.commit()
+
+    return {"detail": "Профиль успешно обновлён"}
