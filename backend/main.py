@@ -70,24 +70,6 @@ def get_current_user(token: str = Depends(oauth2_scheme), db: Session = Depends(
         raise credentials_exception
     return user
 
-def upload_photo(
-    file: UploadFile = File(...),
-    current_user: User = Depends(get_current_user),
-    db: Session = Depends(get_db)
-):
-
-    file_ext = os.path.splitext(file.filename)[1]
-    filename = f"{uuid.uuid4().hex}{file_ext}"
-    file_path = os.path.join(UPLOAD_DIR, filename)
-
-    with open(file_path, "wb") as buffer:
-        shutil.copyfileobj(file.file, buffer)
-
-    current_user.photo_path = file_path
-    db.commit()
-
-    return
-
 @app.post('/register')
 def register(user: UserCreate, db: Session = Depends(get_db)):
     if user.password != user.confirm_password:
@@ -120,6 +102,25 @@ def login(user: UserLogin, db: Session = Depends(get_db)):
     
     token = jwt.encode({"sub": user.email}, SECRET_KEY, algorithm=ALGORITHM)
     return {"access_token": token, "token_type": "bearer"}
+
+@app.post("/upload-photo")
+def upload_photo(
+    file: UploadFile = File(...),
+    current_user: User = Depends(get_current_user),
+    db: Session = Depends(get_db)
+):
+
+    file_ext = os.path.splitext(file.filename)[1]
+    filename = f"{uuid.uuid4().hex}{file_ext}"
+    file_path = os.path.join(UPLOAD_DIR, filename)
+
+    with open(file_path, "wb") as buffer:
+        shutil.copyfileobj(file.file, buffer)
+
+    current_user.photo_path = file_path
+    db.commit()
+
+    return
 
 @app.get("/me")
 def get_profile(current_user: User = Depends(get_current_user)):
