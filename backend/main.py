@@ -104,5 +104,6 @@ def get_profile(current_user: User = Depends(get_current_user)):
         "first_name": current_user.first_name,
         "last_name": current_user.last_name,
         "email": current_user.email,
-        "phone_number": current_user.phone_number
+        "phone_number": current_user.phone_number,
+        "photo_path": current_user.photo_path
     }
