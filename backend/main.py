@@ -12,6 +12,7 @@ from datetime import datetime, timedelta
 import shutil
 import uuid
 from typing import Optional
+from fastapi.staticfiles import StaticFiles
 
 load_dotenv()
 
@@ -30,6 +31,7 @@ os.makedirs(UPLOAD_DIR, exist_ok=True)
 
 Base.metadata.create_all(bind=engine)
 app = FastAPI()
+app.mount("/static", StaticFiles(directory="static"), name="static")
 
 class UserCreate(BaseModel):
     first_name: str
