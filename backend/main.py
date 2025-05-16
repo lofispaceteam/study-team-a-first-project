@@ -25,7 +25,7 @@ os.makedirs(PHOTO_DIR, exist_ok=True)  # Создаст папку, если е�
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="login")
 
-UPLOAD_DIR = "uploaded_photos"
+UPLOAD_DIR = "static/photos"
 os.makedirs(UPLOAD_DIR, exist_ok=True)
 
 Base.metadata.create_all(bind=engine)
@@ -128,7 +128,7 @@ def upload_photo(
     with open(file_path, "wb") as buffer:
         shutil.copyfileobj(file.file, buffer)
 
-    current_user.photo_path = file_path
+    current_user.photo_path = f"/static/photos/{filename}" #Сохраняется путь для Frontend
     db.commit()
 
     return {"detail": "Фото успешно загружено"}
