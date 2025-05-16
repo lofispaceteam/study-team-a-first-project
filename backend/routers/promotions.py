@@ -1,5 +1,6 @@
 from fastapi import APIRouter
 from datetime import datetime, timezone
+import random
 
 router = APIRouter()
 
@@ -49,3 +50,22 @@ bubble_tea_prices = {
     "Лавандовый Bubble Tea": 250,
     "Bubble Tea с васаби": 270,
 }
+
+@router.get("/promotions")
+def get_promotions():
+    now = datetime.now(timezone.utc)
+    random.seed(now.minute)
+
+    selected = random.sample(list(bubble_tea_prices.items()), k=3)
+
+    promotions = []
+    for name, original_price in selected:
+        discount_percent = random.randint(10, 40)
+        discount_price = round(original_price * (1 - discount_percent / 100))
+        promotions.append({
+            "product": name,
+            "original_price": original_price,
+            "discount_price": discount_price
+        })
+
+    return {"promotions": promotions}
