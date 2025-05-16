@@ -128,7 +128,7 @@ def upload_photo(
     db: Session = Depends(get_db)
 ):
     # Проверяем расширение файла
-    allowed_extensions = {".jpg", ".jpeg", ".png", ".gif"}
+    allowed_extensions = {".jpg", ".jpeg", ".png"}
     file_ext = os.path.splitext(file.filename)[1].lower()
     if file_ext not in allowed_extensions:
         raise HTTPException(status_code=400, detail="Недопустимый формат файла. Разрешены: jpg, jpeg, png, gif.")
