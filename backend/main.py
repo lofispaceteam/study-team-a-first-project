@@ -14,6 +14,7 @@ import uuid
 from typing import Optional
 from fastapi.staticfiles import StaticFiles
 import re
+from routers import promotions
 
 load_dotenv()
 
@@ -30,6 +31,7 @@ oauth2_scheme = OAuth2PasswordBearer(tokenUrl="login")
 Base.metadata.create_all(bind=engine)
 app = FastAPI()
 app.mount("/static", StaticFiles(directory="static"), name="static")
+app.include_router(promotions.router)
 
 class UserCreate(BaseModel):
     first_name: str
