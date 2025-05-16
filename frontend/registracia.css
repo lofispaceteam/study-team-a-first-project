@@ -226,6 +226,7 @@ body {
     position: absolute;
     top: 2px;
     left: 0px;
+    user-select: none;
 }
 .zabil.light {
     position: absolute;
@@ -313,17 +314,20 @@ input:checked + .slider:before {
     position: absolute;
     font-size: 10px; /* Размер значков */
     transition: .4s;
+    user-select: none;
 }
 .sun {
     position: absolute;
     left: 14px; /* Позиция солнца */
     top: 12px; /* Подкорректируй при необходимости */
     opacity: 1; /* Солнце видно, когда выключено */
+    user-select: none;
 }
 .moon {
     right: 14px; /* Позиция луны */
     top: 12px; /* Подкорректируй при необходимости */
     opacity: 0; /* Луна скрыта, когда выключено */
+    user-select: none;
 }
 input:checked + .slider .sun {
     opacity: 0; /* Солнце скрыто, когда включено */
