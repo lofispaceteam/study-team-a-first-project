@@ -204,3 +204,8 @@ def update_profile(
     db.commit()
 
     return {"detail": "Профиль успешно обновлён"}
+
+@app.get("/map")
+def get_map_url():
+    
+    return {"map_url": "/static/map/city_map.jpg"}
