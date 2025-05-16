@@ -123,14 +123,22 @@ def upload_photo(
     db: Session = Depends(get_db)
 ):
 
+    # Удаление старого фото, если оно есть
+    if current_user.photo_path:
+        old_path = current_user.photo_path
+        file_to_delete = old_path.lstrip("/")
+        if os.path.exists(file_to_delete):
+            os.remove(file_to_delete)
+
     file_ext = os.path.splitext(file.filename)[1]
     filename = f"{uuid.uuid4().hex}{file_ext}"
-    file_path = os.path.join(UPLOAD_DIR, filename)
+    file_path = os.path.join("static", "photos", filename)
 
     with open(file_path, "wb") as buffer:
         shutil.copyfileobj(file.file, buffer)
 
-    current_user.photo_path = f"/static/photos/{filename}" #Сохраняется путь для Frontend
+    # Обновляем путь в БД
+    current_user.photo_path = f"/{file_path}"  # путь начинается с "/"
     db.commit()
 
     return {"detail": "Фото успешно загружено"}
