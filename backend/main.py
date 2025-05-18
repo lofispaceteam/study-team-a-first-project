@@ -16,23 +16,34 @@ from fastapi.staticfiles import StaticFiles
 import re
 from routers import promotions
 
+# Загружаем переменные окружения из .env файла
 load_dotenv()
 
+# Настройки JWT
 SECRET_KEY = os.getenv("SECRET_KEY")
 ALGORITHM = os.getenv("ALGORITHM")
 ACCESS_TOKEN_EXPIRE_MINUTES = int(os.getenv("ACCESS_TOKEN_EXPIRE_MINUTES"))
 
+# Папка для хранения фото
 PHOTO_DIR = "static/photos"
 os.makedirs(PHOTO_DIR, exist_ok=True)
 
+# Настройки хеширования пароля
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="login")
 
+# Создаем таблицы в БД
 Base.metadata.create_all(bind=engine)
+
 app = FastAPI()
+
+# Подключаем статику (для отображения фото и карты)
 app.mount("/static", StaticFiles(directory="static"), name="static")
+
+# Подключаем роутер акций
 app.include_router(promotions.router)
 
+# Модели Pydantic для валидации входящих данных
 class UserCreate(BaseModel):
     first_name: str
     last_name: str
@@ -54,18 +65,22 @@ class UserLogin(BaseModel):
     email: EmailStr
     password: str
 
+# Хеширует пароль
 def hash_password(password: str) -> str:
     return pwd_context.hash(password)    
 
+# Проверяет соответствие пароля и хеша
 def verify_password(plain_password: str, hashed_password: str) -> bool:
     return pwd_context.verify(plain_password, hashed_password)
 
+# Создает JWT-токен с заданными данными и временем жизни
 def create_access_token(data: dict, expires_delta: timedelta = None):
     to_encode = data.copy()
     expire = datetime.utcnow() + (expires_delta or timedelta(minutes=15))
     to_encode.update({"exp": expire})
     return jwt.encode(to_encode, SECRET_KEY, algorithm=ALGORITHM)
 
+# Получает текущего пользователя из токена
 def get_current_user(token: str = Depends(oauth2_scheme), db: Session = Depends(get_db)):
     credentials_exception = HTTPException(
         status_code=status.HTTP_401_UNAUTHORIZED,
@@ -85,11 +100,13 @@ def get_current_user(token: str = Depends(oauth2_scheme), db: Session = Depends(
         raise credentials_exception
     return user
 
+# Проверяет валидность номера телефона
 def validate_phone(phone: str) -> bool:
     # Пример: телефон должен содержать только цифры, плюс и дефис, от 7 до 15 символов
     pattern = re.compile(r"^\+?[\d\-]{7,15}$")
     return bool(pattern.match(phone))
 
+# Регистрация нового пользователя
 @app.post('/register', status_code = 201)
 def register(user: UserCreate, db: Session = Depends(get_db)):
     if user.password != user.confirm_password:
@@ -112,7 +129,8 @@ def register(user: UserCreate, db: Session = Depends(get_db)):
     db.add(new_user)
     db.commit()
 
-@app.post("/login")
+# Авторизация пользователя
+@app.post("/login", status_code = 201)
 def login(user: UserLogin, db: Session = Depends(get_db)):
     db_user = db.query(User).filter(User.email == user.email).first()
     if not db_user or not verify_password(user.password, db_user.password_hash):
@@ -121,6 +139,7 @@ def login(user: UserLogin, db: Session = Depends(get_db)):
     token = jwt.encode({"sub": user.email}, SECRET_KEY, algorithm=ALGORITHM)
     return {"access_token": token, "token_type": "bearer"}
 
+# Загрузка аватарки пользователя
 @app.post("/upload-photo", status_code = 201)
 def upload_photo(
     file: UploadFile = File(...),
@@ -158,6 +177,7 @@ def upload_photo(
 
     return {"detail": "Фото успешно загружено"}
 
+# Получение данных профиля текущего пользователя
 @app.get("/me")
 def get_profile(request: Request, current_user: User = Depends(get_current_user)):
     # Формируем полный URL для фотографии, если она есть
@@ -173,13 +193,14 @@ def get_profile(request: Request, current_user: User = Depends(get_current_user)
         "photo_url": photo_url
     }
 
+# Обновление профиля пользователя
 @app.put("/me", status_code=200)
 def update_profile(
     user_update: UserUpdate,
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user)
 ):
-    # Обновление основного профиля
+    # Обновление ФИО и телефона
     if user_update.first_name is not None:
         current_user.first_name = user_update.first_name
     if user_update.last_name is not None:
@@ -190,7 +211,7 @@ def update_profile(
             raise HTTPException(status_code=400, detail="Некорректный номер телефона")
         current_user.phone_number = user_update.phone_number
 
-    # Смена пароля
+    # Обновление пароля
     if user_update.new_password or user_update.confirm_new_password:
         if not user_update.current_password:
             raise HTTPException(status_code=400, detail="Требуется текущий пароль")
@@ -207,6 +228,7 @@ def update_profile(
 
     return {"detail": "Профиль успешно обновлён"}
 
+# Возвращает URL карты города
 @app.get("/map")
 def get_map_url():
     
