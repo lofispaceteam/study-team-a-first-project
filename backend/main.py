@@ -150,7 +150,7 @@ def upload_photo(
     allowed_extensions = {".jpg", ".jpeg", ".png"}
     file_ext = os.path.splitext(file.filename)[1].lower()
     if file_ext not in allowed_extensions:
-        raise HTTPException(status_code=400, detail="Недопустимый формат файла. Разрешены: jpg, jpeg, png, gif.")
+        raise HTTPException(status_code=400, detail="Недопустимый формат файла. Разрешены: jpg, jpeg, png")
 
     # Проверяем размер файла (например, максимум 2 МБ)
     file.file.seek(0, os.SEEK_END)
