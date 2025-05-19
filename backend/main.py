@@ -1,4 +1,5 @@
-from fastapi import FastAPI, Depends, HTTPException, status, File, UploadFile, Request
+from fastapi import FastAPI, Depends, HTTPException, status, File, UploadFile, Request, APIRouter
+from fastapi.responses import JSONResponse
 from fastapi.security import OAuth2PasswordBearer 
 from pydantic import BaseModel, EmailStr
 from sqlalchemy.orm import Session
@@ -30,6 +31,7 @@ os.makedirs(PHOTO_DIR, exist_ok=True)
 
 # Настройки хеширования пароля
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
+router = APIRouter()
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="login")
 
 # Создаем таблицы в БД
@@ -150,7 +152,7 @@ def upload_photo(
     allowed_extensions = {".jpg", ".jpeg", ".png"}
     file_ext = os.path.splitext(file.filename)[1].lower()
     if file_ext not in allowed_extensions:
-        raise HTTPException(status_code=400, detail="Недопустимый формат файла. Разрешены: jpg, jpeg, png")
+        raise HTTPException(status_code=415, detail="Недопустимый формат файла. Разрешены: jpg, jpeg, png")
 
     # Проверяем размер файла (например, максимум 2 МБ)
     file.file.seek(0, os.SEEK_END)
@@ -158,7 +160,7 @@ def upload_photo(
     file.file.seek(0)
     max_size = 2 * 1024 * 1024
     if file_size > max_size:
-        raise HTTPException(status_code=400, detail="Файл слишком большой. Максимум 2 МБ.")
+        raise HTTPException(status_code=413, detail="Файл слишком большой. Максимум 2 МБ.")
 
     # Удаление старого фото, если есть
     if current_user.photo_path:
@@ -208,7 +210,7 @@ def update_profile(
 
     if user_update.phone_number is not None:
         if not validate_phone(user_update.phone_number):
-            raise HTTPException(status_code=400, detail="Некорректный номер телефона")
+            raise HTTPException(status_code=422, detail="Некорректный номер телефона")
         current_user.phone_number = user_update.phone_number
 
     # Обновление пароля
@@ -227,6 +229,12 @@ def update_profile(
     db.commit()
 
     return {"detail": "Профиль успешно обновлён"}
+
+@router.post("/logout", status_code = 200)
+def logout(token: str = Depends(oauth2_scheme)):
+    if not token:
+        raise HTTPException(status_code=401, detail="Not authenticated")
+    return JSONResponse(content={"message": "Logged out successfully"})
 
 # Возвращает URL карты города
 @app.get("/map")
