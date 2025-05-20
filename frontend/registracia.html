@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="Вход в аккаунт" content="width=device-width, initial-scale=1.0">
+    <title>Регистрация</title>
+    <link rel="stylesheet" href="registracia.css">
+</head>
+<body class="light">
+    <div class="rectangle light">
+        <div class="form-container">
+            <form>
+                <input type="text" class="name light" placeholder="Имя" required>
+                <input type="text" class="surname light" placeholder="Фамилия" required>
+                <input type="email" class="email light" placeholder="Почта" required>
+                <input type="tel" class="number light" placeholder="Номер телефона" required>
+                <input type="password" class="password light" minlength="6 символов" placeholder="Придумайте пароль" required>
+                <input type="password" class="passwordd light" placeholder="Повторите пароль" required>
+                <button type="submit" class="submit-button">ПРОДОЛЖИТЬ</button>
+            </form>
+        </div>
+        <div class="photo">
+            <img src="image\image_2025-05-16_21-45-26.png" width="679" height="426">
+            <div class="text light">РЕГИСТРАЦИЯ</div>
+        </div>
+        <label class="toggle">
+            <input type="checkbox" id="theme-toggle">
+            <span class="slider">
+                <span class="sun">
+                    <img src="C:\Users\Emil\Desktop\саайт\image\free-icon-sun-606795.png" width="33" height="33">
+                </span>
+                <span class="moon">
+                    <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADIAAAAyCAYAAAAeP4ixAAAACXBIWXMAAAsTAAALEwEAmpwYAAADjElEQVR4nO2ZSWyNURiGj6IsjBU10xBKWRJE1LwQU7ARYlpItEWiWAjCho3YlJhiSEiIBVKJIUEIEpoYSmJWImrWmufhkaNv47RR979T77lJ39W9//m+77zn/Od8029MHergJ4A0YDFwFzhpkg1Aa2Az8Im/KDbJAqAeMAN4SVX8AoaZJHoLpxzydjGX9XuLSQYAWUCJs/vrgQ7AM+AzkG58B5ANvNEiyoAxep6rZ1uN7wB6AeUifAPIcMYu6nmW8RlAW+CByF63/6st0OK2SQLvdEpk7wNtqo3P11iB8RnAHBH9AvT9x/g+jU8yvgJoB7wW0bwaZIo13s/4CmCjSNrLnFKDzGPJdDI+AmgJfFCsGPwfufdaSBPjI4AlIngihNwLyfkZCIE7IjgloFwv4xuAzk70bhRC9ohkxxvfAMwUuQMBZNdJdqXxDcBOkVsUQHaCZE8b3wAUidzgALItgK/Ad+8uPBUpuUX3gPIHJb/Q+ATgo4ilBZQfK/mHQEPjC4AfItYgjMTymnRyjS8A3olU0zB0xkunvHqGnDAApSLVMUy9Q9I7WlNuVqsAzonQkAiy5UpHsSZ+DAMC2CEyORHojgC+BY1DcQWQIyJ7ItSfCvyUjdUJO2ZApkg8jZSEFmMDpcWxWDsAKjo6V4DjJmBWOzKKyYY7d8ZWmnlAaqT2nEbINtVJoZsewIpojle1iQtlqzJo5of7hoA+wHb1Dlzkh1Ls6ORQXaNZjOyNA646BKzdM8AqYKI6mOnK3ToBA4DJwAZ1+HGO+yX9thVsiyCT21dosSvahTgZwBhbHvxjZ0OhCJir9uwrPdsQdOIM5V32PGbHYjGO7WZ6S2uBw8At4LnuUqm6M3uBeUBPR2+T0zhvFc6Ey6R4D2huEggqktPKSz4rXOVU4IKU9ycqJgBdnR7bCXtMIzGSofrdYn1cmP5//vY6eujit4rGWH95iT+XrLbeDNBGjXOLt0DvWBgd7RRdB+N9Z6jYPBt3kKcaGEvjg5xjVhJrb6Y5UoAFTopj58k0cZioi+MArBfZDXSLke2hzvdIi5NxLdRsbQ4sdY7ad/n9UUD9MG01BqbZlpKzgDJgdkTeKYqu5FbnGKDAtlffFocp5fiTSliPo+x6iPrLhY5bRWV2QcLKZaUOy202SmS4aQuxRAfdKgB6KC+yudpZ4JGz6/YzxBPgvLLZ6XYTqlqoQx2Mb/gNmU1H6MuRGbYAAAAASUVORK5CYII=" width="33" height="33">
+                </span>
+            </span>
+        </label>
+    </div>
+    <script>
+        const themeToggle = document.getElementById('theme-toggle');
+
+        themeToggle.addEventListener('change', () => {
+            const isDarkTheme = themeToggle.checked;
+            
+            document.body.classList.toggle('dark', isDarkTheme);
+            document.body.classList.toggle('light', !isDarkTheme);
+
+            const rectangle = document.querySelector('.rectangle');
+            rectangle.classList.toggle('dark', isDarkTheme);
+            rectangle.classList.toggle('light', !isDarkTheme);
+            
+            // Смена классов для текста
+            const text = document.querySelector('.text');
+            text.classList.toggle('dark', isDarkTheme);
+            text.classList.toggle('light', !isDarkTheme);
+            
+            const name = document.querySelector('.name');
+            name.classList.toggle('dark', isDarkTheme);
+            name.classList.toggle('light', !isDarkTheme);
+
+            const surname = document.querySelector('.surname');
+            surname.classList.toggle('dark', isDarkTheme);
+            surname.classList.toggle('light', !isDarkTheme);
+
+            const email = document.querySelector('.email');
+            email.classList.toggle('dark', isDarkTheme);
+            email.classList.toggle('light', !isDarkTheme);
+
+            const number = document.querySelector('.number');
+            number.classList.toggle('dark', isDarkTheme);
+            number.classList.toggle('light', !isDarkTheme);
+
+            const password = document.querySelector('.password');
+            password.classList.toggle('dark', isDarkTheme);
+            password.classList.toggle('light', !isDarkTheme);
+
+            const passwordd = document.querySelector('.passwordd');
+            passwordd.classList.toggle('dark', isDarkTheme);
+            passwordd.classList.toggle('light', !isDarkTheme);
+        });
+
+        // Установка начального состояния темы
+        themeToggle.checked = false; // Убедитесь, что тумблер выключен по умолчанию
+
+    </script>
+</body>
+</html>
