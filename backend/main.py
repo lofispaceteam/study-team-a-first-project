@@ -233,8 +233,8 @@ def update_profile(
 @router.post("/logout", status_code = 200)
 def logout(token: str = Depends(oauth2_scheme)):
     if not token:
-        raise HTTPException(status_code=401, detail="Not authenticated")
-    return JSONResponse(content={"message": "Logged out successfully"})
+        raise HTTPException(status_code=401, detail="Не прошел проверку подлинности")
+    return JSONResponse(content={"message": "Успешно вышли из системы"})
 
 # Возвращает URL карты города
 @app.get("/map")
