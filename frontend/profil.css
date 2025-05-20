@@ -1,0 +1,433 @@
+body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 25px;
+}
+.rectangle {
+    width: 1092px;
+    height: 789px;
+    background-color: #F0F0F0;
+    border: 2px solid black;
+    border-radius: 50px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    color: black;
+    text-align: center;
+}
+.rectangle1.light {
+    width: 278px;
+    height: 223px;
+    background-color: #D9D9D9;
+    border-radius: 38px;
+    position: absolute;
+    top: 107px;
+    right: 79px;
+    color: black;
+    text-align: center;
+}
+.rectangle1.dark {
+    width: 278px;
+    height: 223px;
+    background-color: #343434;
+    border-radius: 38px;
+    position: absolute;
+    top: 107px;
+    right: 79px;
+    color: white;
+    text-align: center;
+}
+.rectangle2.light {
+    width: 161px;
+    height: 44px;
+    background-color: #D9D9D9;
+    border-radius: 11px;
+    position: absolute;
+    top: 383px;
+    left: 83px;
+    color: black;
+}
+.rectangle2.dark {
+    width: 161px;
+    height: 44px;
+    background-color: #343434;
+    border-radius: 11px;
+    position: absolute;
+    top: 383px;
+    left: 83px;
+    color: white;
+}
+.rectangle3.light {
+    width: 307px;
+    height: 44px;
+    background-color: #D9D9D9;
+    border-radius: 11px;
+    position: absolute;
+    top: 383px;
+    right: 65px;
+    color: black;
+    text-align: center;
+}
+.rectangle3.dark {
+    width: 307px;
+    height: 44px;
+    background-color: #343434;
+    border-radius: 11px;
+    position: absolute;
+    top: 383px;
+    right: 65px;
+    color: white;
+    text-align: center;
+}
+.rectangle4.light {
+    width: 645px;
+    height: 244px;
+    background-color: #D9D9D9;
+    border-radius: 37px;
+    position: absolute;
+    top: 503px;
+    right: 224px;
+    color: black;
+}
+.rectangle4.dark {
+    width: 645px;
+    height: 244px;
+    background-color: #343434;
+    border-radius: 37px;
+    position: absolute;
+    top: 503px;
+    right: 224px;
+    color: white;
+}
+.circle {
+    width: 149px;
+    height: 149px;
+    background: linear-gradient(-45deg, #FF8738, #F95852);
+    border-radius: 50%; /* Это ключевое свойство! */
+    position: absolute;
+    top: 47px;
+    right: 59px;
+}
+.circle2 {
+    width: 149px;
+    height: 149px;
+    background: linear-gradient(-45deg, #73FF38, #52B9F9);
+    border-radius: 50%; /* Это ключевое свойство! */
+    position: absolute;
+    top: 47px;
+    right: 248px;
+}
+.circle3 {
+    width: 149px;
+    height: 149px;
+    background: linear-gradient(-45deg, #38DEFF, #D739FF);
+    border-radius: 50%; /* Это ключевое свойство! */
+    position: absolute;
+    top: 47px;
+    left: 59px;
+}
+.redphoto {
+    position: absolute;
+    top: -10.91px;
+    right: 40px;
+    transform: rotate(-15deg);
+    user-select: none;
+}
+.bluephoto {
+    position: absolute;
+    top: -10.91px;
+    right: 230px;
+    transform: rotate(-15deg);
+    user-select: none;
+}
+.purplephoto {
+    position: absolute;
+    top: -10.91px;
+    left: 50px;
+    transform: rotate(-15deg);
+    user-select: none;
+}
+.statisyica.light {
+    position: absolute;
+    top: 7px;
+    right: 99px;
+    font-size: 15px;
+    color: black;
+    font-family: Arial, Helvetica, sans-serif;
+}
+.statisyica.dark {
+    position: absolute;
+    top: 7px;
+    right: 99px;
+    font-size: 15px;
+    color: white;
+    font-family: Arial, Helvetica, sans-serif;
+}
+.kuplenno.light {
+    position: absolute;
+    top: 37px;
+    left: 20px;
+    font-size: 14px;
+    color: black;
+    font-family: Arial, Helvetica, sans-serif;
+}
+.kuplenno.dark {
+    position: absolute;
+    top: 37px;
+    left: 20px;
+    font-size: 14px;
+    color: white;
+    font-family: Arial, Helvetica, sans-serif;
+}
+.poprobavano.light {
+    position: absolute;
+    top: 63px;
+    left: 20px;
+    font-size: 14px;
+    color: black;
+    font-family: Arial, Helvetica, sans-serif;
+}
+.poprobavano.dark {
+    position: absolute;
+    top: 63px;
+    left: 20px;
+    font-size: 14px;
+    color: white;
+    font-family: Arial, Helvetica, sans-serif;
+}
+.popular.light {
+    position: absolute;
+    top: 89px;
+    left: 20px;
+    font-size: 14px;
+    color: black;
+    font-family: Arial, Helvetica, sans-serif;
+}
+.popular.dark {
+    position: absolute;
+    top: 89px;
+    left: 20px;
+    font-size: 14px;
+    color: white;
+    font-family: Arial, Helvetica, sans-serif;
+}
+.name.light {
+    position: absolute;
+    bottom: 29px;
+    right: 43px;
+    color: black;
+    font-size: 24px;
+    font-family: Arial, Helvetica, sans-serif;
+}
+.name.dark {
+    position: absolute;
+    bottom: 29px;
+    right: 43px;
+    color: white;
+    font-size: 24px;
+    font-family: Arial, Helvetica, sans-serif;
+}
+.karta.light {
+    position: absolute;
+    top: 8px;
+    left: 48px;
+    font-size: 24px;
+    color: black;
+    font-family: Arial
+}
+.karta.dark {
+    position: absolute;
+    top: 8px;
+    left: 48px;
+    font-size: 24px;
+    color: white;
+    font-family: Arial
+}
+.redactor.light {
+    position: absolute;
+    top: 8px;
+    left: 15px;
+    font-size: 24px;
+    color: black;
+    font-family: Arial, Helvetica, sans-serif;
+}
+.redactor.dark {
+    position: absolute;
+    top: 8px;
+    left: 15px;
+    font-size: 24px;
+    color: white;
+    font-family: Arial, Helvetica, sans-serif;
+}
+.avatar {
+    position: absolute;
+    top: 107px;
+    right: 435px;
+    width: 223px; /* Ширина аватарки */
+    height: 223px; /* Высота аватарки */
+    border-radius: 50%; /* Закругление углов для создания круга */
+    overflow: hidden; /* Скрыть лишнюю часть изображения */
+    border: 2px solid black; /* Обводка аватарки (по желанию) */
+    user-select: none;
+}
+.avatar img {
+    width: 100%; /* Ширина изображения */
+    height: auto; /* Автоматическая высота для сохранения пропорций */
+    user-select: none;
+}
+.submit-button {
+    padding: 10px 39px;
+    background: linear-gradient(to right, #FF6D3D, #F42E2E);
+    color: white;
+    font-size: 24px;
+    padding: 10px 39px;
+    border: 2px solid black;
+    border-radius: 50px;
+    cursor: pointer;
+    position: absolute;
+    top: 28px;
+    right: 92px;
+}
+.photo {
+    position: absolute;
+    top: 107px;
+    left: 78px;
+    user-select: none;
+}
+.toggle {
+    position: relative;
+    width: 134px;
+    height: 57px;
+    position: absolute;
+    bottom: 42px;
+    left: 53px;
+}
+.toggle input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+.slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #343434;
+    transition: .4s;
+    border-radius: 28.5px;
+}
+.slider:before {
+    position: absolute;
+    content: "";
+    height: 49px;
+    width: 49px;
+    left: 6px;
+    bottom: 4px;
+    background-color: #D9D9D9;
+    transition: .4s;
+    border-radius: 50%;
+}
+input:checked + .slider {
+    background-color: white;
+}
+input:checked + .slider:before {
+    transform: translateX(72px);
+    background-color: #1C1C1C;
+}
+.moon {
+    position: absolute;
+    font-size: 10px; /* Размер значков */
+    transition: .4s;
+    user-select: none;
+}
+.sun {
+    position: absolute;
+    left: 14px; /* Позиция солнца */
+    top: 12px; /* Подкорректируй при необходимости */
+    opacity: 1; /* Солнце видно, когда выключено */
+    user-select: none;
+}
+.moon {
+    right: 14px; /* Позиция луны */
+    top: 12px; /* Подкорректируй при необходимости */
+    opacity: 0; /* Луна скрыта, когда выключено */
+    user-select: none;
+}
+input:checked + .slider .sun {
+    opacity: 0; /* Солнце скрыто, когда включено */
+}
+input:checked + .slider .moon {
+    opacity: 1; /* Луна видно, когда включено */
+}
+
+/* использовал GPT признаюсь, прост хз как сделать */
+
+body {
+    transition: background-color 0.3s, color 0.3s;
+}
+
+body.light {
+    background-color: white;
+    color: black;
+}
+
+body.dark {
+    background-color: #343434;
+    color: white;
+}
+
+.rectangle.light {
+    background-color: #f0f0f0; /* Светлый прямоугольник */
+}
+
+.rectangle.dark {
+    background-color: #1C1C1C; /* Тёмный прямоугольник */
+}
+
+.burger {
+    width: 30px;
+    cursor: pointer;
+    position: absolute;
+    top: 35px;
+    left: 53px;
+}
+.burgerline.light {
+    height: 3px;
+    background: #333;
+    margin: 5px 0;
+    border-radius: 3px;
+}
+.burgerline.dark {
+    height: 3px;
+    background: white;
+    margin: 5px 0;
+    border-radius: 3px;
+}
+.burgerline1.light {
+    height: 3px;
+    background: #333;
+    margin: 5px 0;
+    border-radius: 3px;
+}
+.burgerline2.light {
+    height: 3px;
+    background: #333;
+    margin: 5px 0;
+    border-radius: 3px;
+}
+.burgerline1.dark {
+    height: 3px;
+    background: white;
+    margin: 5px 0;
+    border-radius: 3px;
+}
+.burgerline2.dark {
+    height: 3px;
+    background: white;
+    margin: 5px 0;
+    border-radius: 3px;
+}
