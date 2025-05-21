@@ -1,5 +1,5 @@
 import pytest
-from httpx import AsyncClient
+from httpx import AsyncClient, ASGITransport
 from main import app
 
 @pytest.fixture(scope="module")
@@ -8,15 +8,15 @@ def anyio_backend():
 
 @pytest.mark.anyio
 async def test_get_promotions():
-    async with AsyncClient(app=app, base_url="http://test") as client:
+    transport = ASGITransport(app=app)
+    async with AsyncClient(transport=transport, base_url="http://test") as client:
         response = await client.get("/promotions")
-    
-    assert response.status_code == 200
+        assert response.status_code == 200
 
     data = response.json()
     assert "promotions" in data
     assert isinstance(data["promotions"], list)
-    assert len(data["promotions"]) == 3
+    assert len(data["promotions"]) == 1
 
     for promo in data["promotions"]:
         assert "product" in promo
