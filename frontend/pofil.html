@@ -136,8 +136,9 @@
 
             // Установка начального состояния темы
         themeToggle.checked = false; // Убедитесь, что тумблер выключен по умолчанию
-        document.getElementById("registr").addEventListener("click", function() {
-            window.location.href = ""; // Укажите URL, на который нужно перейти
+        document.querySelector('.submit-button').addEventListener("click", function(e) {
+            e.preventDefault();
+            window.location.href = "C:/Users/Emil/Documents/buble tea/study-team-a-first-project/frontend/index.html"; // Укажите URL, на который нужно перейти
         });
     </script>
 </body>
