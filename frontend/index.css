@@ -94,19 +94,33 @@ body {
     right: 43px;
     color: white;
 }
+
+/* Базовые стили кнопки */
 .submit-button {
-    padding: 10px 20px;
+    padding: 20px 80px;
     background: linear-gradient(to right, #FEEA83, #F98752);
     color: black;
     font-size: 24px;
-    padding: 20px 80px;
     border: 2px solid black;
     border-radius: 50px;
     cursor: pointer;
+    transition: all 0.3s ease;
     position: absolute;
     top: 484px;
     right: 43px;
+    z-index: 1;
 }
+
+/* Подсветка для светлой темы */
+body.light .submit-button:hover {
+    box-shadow: 0 0 35px 15px rgba(249, 135, 82, 0.8);
+}
+
+/* Подсветка для темной темы */
+body.dark .submit-button:hover {
+    box-shadow: 0 0 35px 15px rgba(254, 234, 131, 0.95);
+}
+
 .photo {
     position: absolute;
     top: -34px;
