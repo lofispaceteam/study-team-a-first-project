@@ -231,35 +231,59 @@ body {
 }
 .karta.light {
     position: absolute;
-    top: 8px;
-    left: 48px;
+    top: 383px;
+    left: 83px;
+    width: 161px;
+    height: 44px;
     font-size: 24px;
     color: black;
-    font-family: Arial
+    font-family: Arial;
+    border-radius: 11px;
+    background-color: #D9D9D9;
+    border: none;
+    cursor: pointer;
 }
 .karta.dark {
     position: absolute;
-    top: 8px;
-    left: 48px;
+    top: 383px;
+    left: 83px;
+    width: 161px;
+    height: 44px;
     font-size: 24px;
     color: white;
-    font-family: Arial
+    font-family: Arial;
+    border-radius: 11px;
+    background-color: #343434;
+    border: none;
+    cursor: pointer;
 }
 .redactor.light {
+    width: 307px;
+    height: 44px;
     position: absolute;
-    top: 8px;
-    left: 15px;
+    top: 383px;
+    right: 65px;
     font-size: 24px;
     color: black;
     font-family: Arial, Helvetica, sans-serif;
+    border-radius: 11px;
+    background-color: #D9D9D9;
+    border: none;
+    cursor: pointer;
 }
 .redactor.dark {
+    width: 307px;
+    height: 44px;
     position: absolute;
-    top: 8px;
-    left: 15px;
+    top: 383px;
+    right: 65px;
     font-size: 24px;
     color: white;
     font-family: Arial, Helvetica, sans-serif;
+    border-radius: 11px;
+    background-color: #343434;
+    border: none;
+    cursor: pointer;
 }
 .avatar {
     position: absolute;

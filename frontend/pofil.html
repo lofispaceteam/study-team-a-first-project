@@ -43,12 +43,8 @@
             <div class="popular light">популярный вкус: клубничный чай</div>
             <div class="name light">Эмиль Дощанов</div>
         </div>
-        <div class="rectangle2 light">
-            <div class="karta light">карта</div>
-        </div>
-        <div class="rectangle3 light">
-            <div class="redactor light">редактировать профиль</div>
-        </div>
+        <button class="karta light">карта</button>
+        <button class="redactor light">редактировать профиль</button>
         <div class="rectangle4 light">
             <div class="circle"></div>
             <div class="circle2"></div>
@@ -141,14 +137,6 @@
             name.classList.toggle('dark', isDarkTheme);
             name.classList.toggle('light', !isDarkTheme);
 
-            const karta = document.querySelector('.karta');
-            karta.classList.toggle('dark', isDarkTheme);
-            karta.classList.toggle('light', !isDarkTheme);
-
-            const redactor = document.querySelector('.redactor');
-            redactor.classList.toggle('dark', isDarkTheme);
-            redactor.classList.toggle('light', !isDarkTheme);
-
             const burgerline = document.querySelector('.burgerline');
             burgerline.classList.toggle('dark', isDarkTheme);
             burgerline.classList.toggle('light', !isDarkTheme);
@@ -160,6 +148,14 @@
             const burgerline2 = document.querySelector('.burgerline2');
             burgerline2.classList.toggle('dark', isDarkTheme);
             burgerline2.classList.toggle('light', !isDarkTheme);
+
+            const redactor = document.querySelector('.redactor');
+            redactor.classList.toggle('dark', isDarkTheme);
+            redactor.classList.toggle('light', !isDarkTheme);
+
+            const karta = document.querySelector('.karta');
+            karta.classList.toggle('dark', isDarkTheme);
+            karta.classList.toggle('light', !isDarkTheme);
         })
 
             // Установка начального состояния темы
