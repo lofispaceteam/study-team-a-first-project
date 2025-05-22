@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="Вход в аккаунт" content="width=device-width, initial-scale=1.0">
+    <title>Профиль</title>
+    <link rel="stylesheet" href="C:\Users\Emil\Documents\buble tea\study-team-a-first-project\frontend\profil.css">
+    <style>
+        /* Базовые стили кнопки */
+        .submit-button {
+            padding: 10px 39px;
+            background: linear-gradient(to right, #FF6D3D, #F42E2E);
+            color: white;
+            font-size: 24px;
+            padding: 10px 39px;
+            border: 2px solid black;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: absolute;
+            top: 28px;
+            right: 92px;
+            z-index: 1;
+        }
+
+        /* Подсветка для светлой темы */
+        body.light .submit-button:hover {
+            box-shadow: 0 0 35px 15px rgba(249, 135, 82, 0.8);
+        }
+
+        /* Подсветка для темной темы */
+        body.dark .submit-button:hover {
+            box-shadow: 0 0 35px 15px rgba(249, 135, 82, 0.8);
+        }
+    </style>
+</head>
+<body class="light">
+    <div class="rectangle light">
+        <div class="rectangle1 light">
+            <div class="statisyica light">статистика</div>
+            <div class="kuplenno light">купленно: 100шт</div>
+            <div class="poprobavano light">попробованно вкусов: 10/47</div>
+            <div class="popular light">популярный вкус: клубничный чай</div>
+            <div class="name light">Эмиль Дощанов</div>
+        </div>
+        <button class="karta light">карта</button>
+        <button class="redactor light">редактировать профиль</button>
+        <div class="rectangle4 light">
+            <div class="circle"></div>
+            <div class="circle2"></div>
+            <div class="circle3"></div>
+            <dev class="redphoto">
+                <img src="C:\Users\Emil\Documents\buble tea\study-team-a-first-project\frontend\image\file_000000009c48620a9159b8b98edd3c9b.png" width="173" height="259.5">
+            </dev>
+            <dev class="bluephoto">
+                <img src="C:\Users\Emil\Documents\buble tea\study-team-a-first-project\frontend\image\file_0000000067f8620ab2368f5cc4aceb9c.png" width="173" height="260">
+            </dev>
+            <dev class="purplephoto">
+                <img src="C:\Users\Emil\Documents\buble tea\study-team-a-first-project\frontend\image\file_000000003078624697f2638f3229b10e.png" width="173" height="260">
+            </dev>
+        </div>
+        <div class="burger">
+            <div class="burgerline light"></div>
+            <div class="burgerline1 light"></div>
+            <div class="burgerline2 light"></div>
+        </div>
+        <div class="avatar">
+            <img src="https://example.com/path/to/avatar.jpg" alt="Аватарка">
+        </div>
+        <div class="form-container">
+            <form>
+                <button type="submit" class="submit-button">ВЫЙТИ</button>
+            </form>
+        </div>
+        <div class="photo">
+            <img src="C:\Users\Emil\Documents\buble tea\study-team-a-first-project\frontend\image\image_2025-05-20_18-51-39.png" width="278" height="223">
+        </div>
+        <label class="toggle">
+            <input type="checkbox" id="theme-toggle">
+            <span class="slider">
+                <span class="sun">
+                    <img src="C:\Users\Emil\Desktop\саайт\image\free-icon-sun-606795.png" width="33" height="33">
+                </span>
+                <span class="moon">
+                    <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADIAAAAyCAYAAAAeP4ixAAAACXBIWXMAAAsTAAALEwEAmpwYAAADjElEQVR4nO2ZSWyNURiGj6IsjBU10xBKWRJE1LwQU7ARYlpItEWiWAjCho3YlJhiSEiIBVKJIUEIEpoYSmJWImrWmufhkaNv47RR979T77lJ39W9//m+77zn/Od8029MHergJ4A0YDFwFzhpkg1Aa2Az8Im/KDbJAqAeMAN4SVX8AoaZJHoLpxzydjGX9XuLSQYAWUCJs/vrgQ7AM+AzkG58B5ANvNEiyoAxep6rZ1uN7wB6AeUifAPIcMYu6nmW8RlAW+CByF63/6st0OK2SQLvdEpk7wNtqo3P11iB8RnAHBH9AvT9x/g+jU8yvgJoB7wW0bwaZIo13s/4CmCjSNrLnFKDzGPJdDI+AmgJfFCsGPwfufdaSBPjI4AlIngihNwLyfkZCIE7IjgloFwv4xuAzk70bhRC9ohkxxvfAMwUuQMBZNdJdqXxDcBOkVsUQHaCZE8b3wAUidzgALItgK/Ad+8uPBUpuUX3gPIHJb/Q+ATgo4ilBZQfK/mHQEPjC4AfItYgjMTymnRyjS8A3olU0zB0xkunvHqGnDAApSLVMUy9Q9I7WlNuVqsAzonQkAiy5UpHsSZ+DAMC2CEyORHojgC+BY1DcQWQIyJ7ItSfCvyUjdUJO2ZApkg8jZSEFmMDpcWxWDsAKjo6V4DjJmBWOzKKyYY7d8ZWmnlAaqT2nEbINtVJoZsewIpojle1iQtlqzJo5of7hoA+wHb1Dlzkh1Ls6ORQXaNZjOyNA646BKzdM8AqYKI6mOnK3ToBA4DJwAZ1+HGO+yX9thVsiyCT21dosSvahTgZwBhbHvxjZ0OhCJir9uwrPdsQdOIM5V32PGbHYjGO7WZ6S2uBw8At4LnuUqm6M3uBeUBPR2+T0zhvFc6Ey6R4D2huEggqktPKSz4rXOVU4IKU9ycqJgBdnR7bCXtMIzGSofrdYn1cmP5//vY6eujit4rGWH95iT+XrLbeDNBGjXOLt0DvWBgd7RRdB+N9Z6jYPBt3kKcaGEvjg5xjVhJrb6Y5UoAFTopj58k0cZioi+MArBfZDXSLke2hzvdIi5NxLdRsbQ4sdY7ad/n9UUD9MG01BqbZlpKzgDJgdkTeKYqu5FbnGKDAtlffFocp5fiTSliPo+x6iPrLhY5bRWV2QcLKZaUOy202SmS4aQuxRAfdKgB6KC+yudpZ4JGz6/YzxBPgvLLZ6XYTqlqoQx2Mb/gNmU1H6MuRGbYAAAAASUVORK5CYII=" width="33" height="33">
+                </span>
+            </span>
+        </label>
+    </div>
+    <script>
+        const themeToggle = document.getElementById('theme-toggle');
+
+        themeToggle.addEventListener('change', () => {
+            const isDarkTheme = themeToggle.checked;
+            
+            document.body.classList.toggle('dark', isDarkTheme);
+            document.body.classList.toggle('light', !isDarkTheme);
+
+            const rectangle = document.querySelector('.rectangle');
+            rectangle.classList.toggle('dark', isDarkTheme);
+            rectangle.classList.toggle('light', !isDarkTheme);
+            
+            // Смена классов для текста
+            const rectangle1 = document.querySelector('.rectangle1');
+            rectangle1.classList.toggle('dark', isDarkTheme);
+            rectangle1.classList.toggle('light', !isDarkTheme);
+
+            const rectangle2 = document.querySelector('.rectangle2');
+            rectangle2.classList.toggle('dark', isDarkTheme);
+            rectangle2.classList.toggle('light', !isDarkTheme);
+
+            const rectangle3 = document.querySelector('.rectangle3');
+            rectangle3.classList.toggle('dark', isDarkTheme);
+            rectangle3.classList.toggle('light', !isDarkTheme);
+            
+            const rectangle4 = document.querySelector('.rectangle4');
+            rectangle4.classList.toggle('dark', isDarkTheme);
+            rectangle4.classList.toggle('light', !isDarkTheme);
+
+            const statisyica = document.querySelector('.statisyica');
+            statisyica.classList.toggle('dark', isDarkTheme);
+            statisyica.classList.toggle('light', !isDarkTheme);
+
+            const kuplenno = document.querySelector('.kuplenno');
+            kuplenno.classList.toggle('dark', isDarkTheme);
+            kuplenno.classList.toggle('light', !isDarkTheme);
+
+            const poprobavano = document.querySelector('.poprobavano');
+            poprobavano.classList.toggle('dark', isDarkTheme);
+            poprobavano.classList.toggle('light', !isDarkTheme);
+
+            const popular = document.querySelector('.popular');
+            popular.classList.toggle('dark', isDarkTheme);
+            popular.classList.toggle('light', !isDarkTheme);
+
+            const name = document.querySelector('.name');
+            name.classList.toggle('dark', isDarkTheme);
+            name.classList.toggle('light', !isDarkTheme);
+
+            const burgerline = document.querySelector('.burgerline');
+            burgerline.classList.toggle('dark', isDarkTheme);
+            burgerline.classList.toggle('light', !isDarkTheme);
+
+            const burgerline1 = document.querySelector('.burgerline1');
+            burgerline1.classList.toggle('dark', isDarkTheme);
+            burgerline1.classList.toggle('light', !isDarkTheme);
+
+            const burgerline2 = document.querySelector('.burgerline2');
+            burgerline2.classList.toggle('dark', isDarkTheme);
+            burgerline2.classList.toggle('light', !isDarkTheme);
+
+            const redactor = document.querySelector('.redactor');
+            redactor.classList.toggle('dark', isDarkTheme);
+            redactor.classList.toggle('light', !isDarkTheme);
+
+            const karta = document.querySelector('.karta');
+            karta.classList.toggle('dark', isDarkTheme);
+            karta.classList.toggle('light', !isDarkTheme);
+        })
+
+            // Установка начального состояния темы
+        themeToggle.checked = false; // Убедитесь, что тумблер выключен по умолчанию
+        document.querySelector('.submit-button').addEventListener("click", function(e) {
+            e.preventDefault();
+            window.location.href = "C:/Users/Emil/Documents/buble tea/study-team-a-first-project/frontend/index.html"; // Укажите URL, на который нужно перейти
+        });
+        // Функция переключения темы
+        function toggleTheme() {
+            const body = document.body;
+            const isDark = body.classList.contains('dark-theme');
+        
+            if (isDark) {
+                // Переключаем на светлую тему
+                body.classList.remove('dark-theme');
+                body.setAttribute('data-theme', 'light');
+                localStorage.setItem('theme', 'light');
+            } else {
+                // Переключаем на темную тему
+                body.classList.add('dark-theme');
+                body.setAttribute('data-theme', 'dark');
+                localStorage.setItem('theme', 'dark');
+            }
+        }
+
+        // Проверка сохраненной темы при загрузке
+        document.addEventListener('DOMContentLoaded', () => {
+            const savedTheme = localStorage.getItem('theme') || 'light';
+            document.body.setAttribute('data-theme', savedTheme);
+            if (savedTheme === 'dark') {
+                document.body.classList.add('dark-theme');
+            }
+
+         // Добавляем обработчик для переключателя
+            document.getElementById('togggle').addEventListener('click', toggleTheme);
+        });
+    </script>
+</body>
+</html>

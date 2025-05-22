@@ -5,6 +5,33 @@
     <meta name="Вход в аккаунт" content="width=device-width, initial-scale=1.0">
     <title>Регистрация</title>
     <link rel="stylesheet" href="registracia.css">
+    <style>
+        /* Базовые стили кнопки */
+        .submit-button {
+            padding: 20px 80px;
+            background: linear-gradient(to right, #FEEA83, #F98752);
+            color: black;
+            font-size: 24px;
+            border: 2px solid black;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: absolute;
+            bottom: 37px;
+            right: 50px;
+            z-index: 1;
+        }
+
+        /* Подсветка для светлой темы */
+        body.light .submit-button:hover {
+            box-shadow: 0 0 35px 15px rgba(249, 135, 82, 0.8);
+        }
+
+        /* Подсветка для темной темы */
+        body.dark .submit-button:hover {
+            box-shadow: 0 0 35px 15px rgba(254, 234, 131, 0.95);
+        }
+    </style>
 </head>
 <body class="light">
     <div class="rectangle light">
@@ -77,7 +104,42 @@
             passwordd.classList.toggle('dark', isDarkTheme);
             passwordd.classList.toggle('light', !isDarkTheme);
         });
+                // Установка начального состояния темы
+                themeToggle.checked = false; // Убедитесь, что тумблер выключен по умолчанию
+        // Обработчик для кнопки регистрации
+        document.querySelector('.submit-button').addEventListener('click', function(e) {
+            e.preventDefault();
+            window.location.href = 'C:/Users/Emil/Documents/buble tea/study-team-a-first-project/frontend/pofil.html';
+        });
+                // Функция переключения темы
+        function toggleTheme() {
+            const body = document.body;
+            const isDark = body.classList.contains('dark-theme');
+        
+            if (isDark) {
+                // Переключаем на светлую тему
+                body.classList.remove('dark-theme');
+                body.setAttribute('data-theme', 'light');
+                localStorage.setItem('theme', 'light');
+            } else {
+                // Переключаем на темную тему
+                body.classList.add('dark-theme');
+                body.setAttribute('data-theme', 'dark');
+                localStorage.setItem('theme', 'dark');
+            }
+        }
 
+        // Проверка сохраненной темы при загрузке
+        document.addEventListener('DOMContentLoaded', () => {
+            const savedTheme = localStorage.getItem('theme') || 'light';
+            document.body.setAttribute('data-theme', savedTheme);
+            if (savedTheme === 'dark') {
+                document.body.classList.add('dark-theme');
+            }
+
+         // Добавляем обработчик для переключателя
+            document.getElementById('togggle').addEventListener('click', toggleTheme);
+        });
         // Установка начального состояния темы
         themeToggle.checked = false; // Убедитесь, что тумблер выключен по умолчанию
 
