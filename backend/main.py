@@ -234,6 +234,6 @@ app.include_router(router)
 
 # Возвращает URL карты города
 @app.get("/map")
-def get_map_url():
-    
-    return {"map_url": "/static/map/city_map.jpg"}
+def get_map_url(request: Request):
+    full_url = str(request.base_url)[:-1] + "/static/map/restaurant_map.jpg"
+    return {"map_url": full_url}
