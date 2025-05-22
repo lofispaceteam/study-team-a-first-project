@@ -1,5 +1,6 @@
 from sqlalchemy.exc import OperationalError
 from database import engine, get_db
+from sqlalchemy import text
 
 def test_database_connection():
     try:
@@ -15,7 +16,7 @@ def test_get_db_yields_session():
     assert session is not None
     assert session.bind == engine  # проверяем, что привязана к правильному движку
     try:
-        session.execute("SELECT 1")  # простой запрос
+        session.execute(text("SELECT 1"))  # простой запрос
     finally:
         try:
             next(gen)

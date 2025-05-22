@@ -124,7 +124,7 @@ def register(user: UserCreate, db: Session = Depends(get_db)):
         first_name = user.first_name,
         last_name = user.last_name,
         email = user.email,
-        password = user.password,
+        phone_number=user.phone_number,
         password_hash = pwd_context.hash(user.password)
     )
 
@@ -235,6 +235,8 @@ def logout(token: str = Depends(oauth2_scheme)):
     if not token:
         raise HTTPException(status_code=401, detail="Не прошел проверку подлинности")
     return JSONResponse(content={"message": "Успешно вышли из системы"})
+
+app.include_router(router)
 
 # Возвращает URL карты города
 @app.get("/map")

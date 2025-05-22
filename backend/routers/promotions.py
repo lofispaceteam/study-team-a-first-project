@@ -64,8 +64,8 @@ def get_promotions():
     # чтобы акции менялись каждую минуту, но оставались одинаковыми в течение этой минуты
     random.seed(now.minute)
 
-    # Случайным образом выбираем 3 напитка из ассортимента
-    selected = random.sample(list(bubble_tea_prices.items()), k=3)
+    # Случайным образом выбираем 1 напиток из ассортимента
+    selected = random.sample(list(bubble_tea_prices.items()), k=1)
 
     promotions = []
     for name, original_price in selected:
