@@ -37,11 +37,11 @@ themeToggle.checked = false; // Убедитесь, что тумблер вык
 // Обработчик для кнопки регистрации
 document.querySelector('.registr').addEventListener('click', function (e) {
     e.preventDefault();
-    window.location.href = 'C:/Users/Emil/Documents/buble tea/study-team-a-first-project/frontend/registracia.html';
+    window.location.href = 'registracia.html';
 })
 document.querySelector('.submit-button').addEventListener('click', function (e) {
     e.preventDefault();
-    window.location.href = 'C:/Users/Emil/Documents/buble tea/study-team-a-first-project/frontend/pofil.html';
+    window.location.href = 'pofil.html';
 });
 // Функция переключения темы
 function toggleTheme() {

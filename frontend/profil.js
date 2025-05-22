@@ -72,7 +72,7 @@ themeToggle.addEventListener('change', () => {
 themeToggle.checked = false; // Убедитесь, что тумблер выключен по умолчанию
 document.querySelector('.submit-button').addEventListener("click", function(e) {
     e.preventDefault();
-    window.location.href = "C:/Users/Emil/Documents/buble tea/study-team-a-first-project/frontend/index.html"; // Укажите URL, на который нужно перейти
+    window.location.href = "index.html"; // Укажите URL, на который нужно перейти
 });
 // Функция переключения темы
 function toggleTheme() {

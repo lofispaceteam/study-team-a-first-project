@@ -1,4 +1,4 @@
-const API_URL = "http://127.0.0.1:8000";  // подставь сюда URL твоего бэкенда
+const API_URL = "http://localhost:8000";  // подставь сюда URL твоего бэкенда
 
 // Функция для сохранения токенов в localStorage
 function saveTokens(accessToken, refreshToken) {
@@ -144,7 +144,7 @@ form.addEventListener('submit', async (e) => {
     const data = Object.fromEntries(formData.entries());
 
     try {
-        const res = await fetch("http://127.0.0.1:8000", {
+        const res = await fetch("http://localhost:8000", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(data),
@@ -161,4 +161,68 @@ form.addEventListener('submit', async (e) => {
         console.error("Ошибка:", err);
         alert("Произошла ошибка при регистрации");
     }
+});
+
+fetch("http://localhost:8000/register", {
+  method: "POST",
+  headers: {
+    "Content-Type": "application/json"
+  },
+  body: JSON.stringify({
+    first_name: "Иван",
+    last_name: "Иванов",
+    email: "ivan@example.com",
+    phone_number: "+71234567890",
+    password: "пароль123",
+    confirm_password: "пароль123"
+  })
+})
+.then(async (response) => {
+  if (response.ok) {
+    alert("Регистрация успешна!");
+    // Можно перенаправить на страницу входа
+    window.location.href = "login.html";
+  } else {
+    const error = await response.json();
+    alert("Ошибка регистрации: " + error.detail);
+  }
+})
+.catch(err => {
+  alert("Ошибка сети или сервера");
+  console.error(err);
+});
+
+// login.js
+document.querySelector('#login-form').addEventListener('submit', async function (e) {
+  e.preventDefault();
+
+  const email = document.querySelector('#email').value;
+  const password = document.querySelector('#password').value;
+
+  try {
+    const response = await fetch(`${API_URL}/login`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({ email, password })
+    });
+
+    if (response.ok) {
+      const data = await response.json();
+
+      // Сохраняем токены в localStorage
+      localStorage.setItem("access_token", data.access_token);
+      localStorage.setItem("refresh_token", data.refresh_token);
+
+      // Переход на страницу профиля
+      window.location.href = "pofil.html";
+    } else {
+      const error = await response.json();
+      alert("Ошибка: " + error.detail);
+    }
+  } catch (err) {
+    alert("Ошибка подключения к серверу");
+    console.error(err);
+  }
 });
