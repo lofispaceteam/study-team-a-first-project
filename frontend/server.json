@@ -1,0 +1,8 @@
+{
+    "first_name": "Иван",
+    "last_name": "Иванов",
+    "email": "ivan@example.com",
+    "phone_number": "+71234567890",
+    "password": "пароль123",
+    "confirm_password": "пароль123"
+  }

@@ -4,6 +4,10 @@ body {
     align-items: center;
     margin: 20px;
 }
+.error {
+    color: red;
+    margin-top: 10px;
+}
 .rectangle {
     width: 679px;
     height: 1035px;

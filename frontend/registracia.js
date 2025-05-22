@@ -44,7 +44,7 @@ themeToggle.checked = false; // Убедитесь, что тумблер вык
 // Обработчик для кнопки регистрации
 document.querySelector('.submit-button').addEventListener('click', function (e) {
     e.preventDefault();
-    window.location.href = 'C:/Users/Emil/Documents/buble tea/study-team-a-first-project/frontend/index.html';
+    window.location.href = 'index.html';
 });
 // Функция переключения темы
 function toggleTheme() {
@@ -73,7 +73,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // Добавляем обработчик для переключателя
-    document.getElementById('togggle').addEventListener('click', toggleTheme);
+  
 });
 // Установка начального состояния темы
 themeToggle.checked = false; // Убедитесь, что тумблер выключен по умолчанию
