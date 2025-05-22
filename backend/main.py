@@ -16,6 +16,7 @@ from typing import Optional
 from fastapi.staticfiles import StaticFiles
 import re
 from routers import promotions
+from routers.upload_photo import router as upload_photo_router
 
 # Загружаем переменные окружения из .env файла
 load_dotenv()
@@ -38,7 +39,7 @@ oauth2_scheme = OAuth2PasswordBearer(tokenUrl="login")
 Base.metadata.create_all(bind=engine)
 
 app = FastAPI()
-
+app.include_router(upload_photo_router)
 # Подключаем статику (для отображения фото и карты)
 app.mount("/static", StaticFiles(directory="static"), name="static")
 
@@ -109,7 +110,7 @@ def validate_phone(phone: str) -> bool:
     return bool(pattern.match(phone))
 
 # Регистрация нового пользователя
-@app.post('/register', status_code = 201)
+@app.post('/Register', status_code = 201)
 def register(user: UserCreate, db: Session = Depends(get_db)):
     if user.password != user.confirm_password:
         raise HTTPException(status_code = 422, detail = "Пароли не совпадают!")
@@ -132,7 +133,7 @@ def register(user: UserCreate, db: Session = Depends(get_db)):
     db.commit()
 
 # Авторизация пользователя
-@app.post("/login", status_code = 201)
+@app.post("/Login", status_code = 201)
 def login(user: UserLogin, db: Session = Depends(get_db)):
     db_user = db.query(User).filter(User.email == user.email).first()
     if not db_user or not verify_password(user.password, db_user.password_hash):
@@ -142,7 +143,7 @@ def login(user: UserLogin, db: Session = Depends(get_db)):
     return {"access_token": token, "token_type": "bearer"}
 
 # Загрузка аватарки пользователя
-@app.post("/upload-photo", status_code = 201)
+@app.post("/Upload-photo", status_code = 201)
 def upload_photo(
     file: UploadFile = File(...),
     current_user: User = Depends(get_current_user),
@@ -180,7 +181,7 @@ def upload_photo(
     return {"detail": "Фото успешно загружено"}
 
 # Получение данных профиля текущего пользователя
-@app.get("/me")
+@app.get("/Me")
 def get_profile(request: Request, current_user: User = Depends(get_current_user)):
     # Формируем полный URL для фотографии, если она есть
     photo_url = None
@@ -196,7 +197,7 @@ def get_profile(request: Request, current_user: User = Depends(get_current_user)
     }
 
 # Обновление профиля пользователя
-@app.put("/me", status_code=200)
+@app.put("/Me", status_code=200)
 def update_profile(
     user_update: UserUpdate,
     db: Session = Depends(get_db),
@@ -230,7 +231,7 @@ def update_profile(
 
     return {"detail": "Профиль успешно обновлён"}
 
-@router.post("/logout", status_code = 200)
+@router.post("/Logout", status_code = 200)
 def logout(token: str = Depends(oauth2_scheme)):
     if not token:
         raise HTTPException(status_code=401, detail="Не прошел проверку подлинности")
@@ -239,7 +240,7 @@ def logout(token: str = Depends(oauth2_scheme)):
 app.include_router(router)
 
 # Возвращает URL карты города
-@app.get("/map")
+@app.get("/Map")
 def get_map_url():
     
     return {"map_url": "/static/map/city_map.jpg"}
