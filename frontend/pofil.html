@@ -5,6 +5,34 @@
     <meta name="Вход в аккаунт" content="width=device-width, initial-scale=1.0">
     <title>Профиль</title>
     <link rel="stylesheet" href="C:\Users\Emil\Documents\buble tea\study-team-a-first-project\frontend\profil.css">
+    <style>
+        /* Базовые стили кнопки */
+        .submit-button {
+            padding: 10px 39px;
+            background: linear-gradient(to right, #FF6D3D, #F42E2E);
+            color: white;
+            font-size: 24px;
+            padding: 10px 39px;
+            border: 2px solid black;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: absolute;
+            top: 28px;
+            right: 92px;
+            z-index: 1;
+        }
+
+        /* Подсветка для светлой темы */
+        body.light .submit-button:hover {
+            box-shadow: 0 0 35px 15px rgba(249, 135, 82, 0.8);
+        }
+
+        /* Подсветка для темной темы */
+        body.dark .submit-button:hover {
+            box-shadow: 0 0 35px 15px rgba(249, 135, 82, 0.8);
+        }
+    </style>
 </head>
 <body class="light">
     <div class="rectangle light">
@@ -139,6 +167,35 @@
         document.querySelector('.submit-button').addEventListener("click", function(e) {
             e.preventDefault();
             window.location.href = "C:/Users/Emil/Documents/buble tea/study-team-a-first-project/frontend/index.html"; // Укажите URL, на который нужно перейти
+        });
+        // Функция переключения темы
+        function toggleTheme() {
+            const body = document.body;
+            const isDark = body.classList.contains('dark-theme');
+        
+            if (isDark) {
+                // Переключаем на светлую тему
+                body.classList.remove('dark-theme');
+                body.setAttribute('data-theme', 'light');
+                localStorage.setItem('theme', 'light');
+            } else {
+                // Переключаем на темную тему
+                body.classList.add('dark-theme');
+                body.setAttribute('data-theme', 'dark');
+                localStorage.setItem('theme', 'dark');
+            }
+        }
+
+        // Проверка сохраненной темы при загрузке
+        document.addEventListener('DOMContentLoaded', () => {
+            const savedTheme = localStorage.getItem('theme') || 'light';
+            document.body.setAttribute('data-theme', savedTheme);
+            if (savedTheme === 'dark') {
+                document.body.classList.add('dark-theme');
+            }
+
+         // Добавляем обработчик для переключателя
+            document.getElementById('togggle').addEventListener('click', toggleTheme);
         });
     </script>
 </body>
