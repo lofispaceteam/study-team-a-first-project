@@ -144,41 +144,31 @@ def login(user: UserLogin, db: Session = Depends(get_db)):
 
 # Загрузка аватарки пользователя
 @app.post("/Upload-photo", status_code = 201)
-def upload_photo(
-    file: UploadFile = File(...),
-    current_user: User = Depends(get_current_user),
-    db: Session = Depends(get_db)
-):
-    # Проверяем расширение файла
-    allowed_extensions = {".jpg", ".jpeg", ".png"}
-    file_ext = os.path.splitext(file.filename)[1].lower()
-    if file_ext not in allowed_extensions:
-        raise HTTPException(status_code=415, detail="Недопустимый формат файла. Разрешены: jpg, jpeg, png")
+async def upload_photo(file: UploadFile = File(...), user: dict = Depends(get_current_user)):
+    if not file.content_type.startswith("image/"):
+        raise HTTPException(status_code=400, detail="Файл должен быть изображением")
 
-    # Проверяем размер файла (например, максимум 2 МБ)
-    file.file.seek(0, os.SEEK_END)
-    file_size = file.file.tell()
-    file.file.seek(0)
-    max_size = 2 * 1024 * 1024
-    if file_size > max_size:
-        raise HTTPException(status_code=413, detail="Файл слишком большой. Максимум 2 МБ.")
+    upload_folder = "static/photos"
+    os.makedirs(upload_folder, exist_ok=True)
 
-    # Удаление старого фото, если есть
-    if current_user.photo_path:
-        old_path = current_user.photo_path.lstrip("/")
-        if os.path.exists(old_path):
-            os.remove(old_path)
-
-    filename = f"{uuid.uuid4().hex}{file_ext}"
-    file_path = os.path.join("static", "photos", filename)
+    safe_email = user.email.replace("@", "_").replace(".", "_")
+    filename = f"{safe_email}_{file.filename}"
+    file_path = os.path.join(upload_folder, filename)
 
     with open(file_path, "wb") as buffer:
         shutil.copyfileobj(file.file, buffer)
 
-    current_user.photo_path = f"/{file_path}"  # относительный URL с "/"
-    db.commit()
+    # Ссылка на фото
+    photo_url = f"/static/photos/{filename}"
 
-    return {"detail": "Фото успешно загружено"}
+    return JSONResponse(
+        content={
+            "filename": filename,
+            "message": "Фото успешно загружено",
+            "photo_url": photo_url
+        },
+        status_code=201
+    )
 
 # Получение данных профиля текущего пользователя
 @app.get("/Me")
