@@ -37,11 +37,13 @@
     <div class="rectangle light">
         <div class="text light">Войдите в аккаунт</div>
         <div class="form-container">
-            <form>
-                <input type="email" class="pochta light" placeholder="Введите почту" required>
-                <input type="password" class="parol light" placeholder="Введите пароль" required>
+            <form id="login-form">
+                <input id="email" type="email" class="pochta light" placeholder="Введите почту" required>
+                <input id="password" type="password" class="parol light" placeholder="Введите пароль" required minlength="8">
                 <button type="submit" class="submit-button">ВОЙТИ</button>
+                <pre id="output"></pre>
             </form>
+            <div id="error" style="color: red;"></div>
         </div>
         <div class="photo">
             <img src="C:\Users\Emil\Desktop\саайт\image\image_2025-05-10_13-02-21.png" width="671.87" height="671.99">
@@ -60,6 +62,7 @@
             </span>
         </label>
     </div>
-    <script src="C:\Users\Emil\Documents\buble tea\study-team-a-first-project\frontend\index.js"></script>
+    <script src="C:\Users\Emil\Documents\buble tea\study-team-a-first-project\frontend\server.js" defer></script>
+    <script src="C:\Users\Emil\Documents\buble tea\study-team-a-first-project\frontend\index.js" defer></script>
 </body>
 </html>
