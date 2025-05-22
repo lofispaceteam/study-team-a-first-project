@@ -1,21 +1,22 @@
 from fastapi import FastAPI, Depends, HTTPException, status, File, UploadFile, Request, APIRouter
-from fastapi.responses import JSONResponse
+from fastapi.middleware.cors import CORSMiddleware
 from fastapi.security import OAuth2PasswordBearer 
 from pydantic import BaseModel, EmailStr
 from sqlalchemy.orm import Session
-from models import User
+from models import User, RefreshToken
 from database import Base, engine, get_db
 from passlib.context import CryptContext
 from dotenv import load_dotenv
 import os
 from jose import jwt, JWTError
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 import shutil
 import uuid
 from typing import Optional
 from fastapi.staticfiles import StaticFiles
 import re
 from routers import promotions
+from routers.upload_photo import router as upload_photo_router
 
 # Загружаем переменные окружения из .env файла
 load_dotenv()
@@ -38,10 +39,18 @@ oauth2_scheme = OAuth2PasswordBearer(tokenUrl="login")
 Base.metadata.create_all(bind=engine)
 
 app = FastAPI()
-
+app.include_router(upload_photo_router)
 # Подключаем статику (для отображения фото и карты)
 app.mount("/static", StaticFiles(directory="static"), name="static")
 
+#
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],  # или ["http://localhost:3000"], а так это все.
+    allow_credentials=True,
+    allow_methods=["*"],  
+    allow_headers=["*"],  
+)
 # Подключаем роутер акций
 app.include_router(promotions.router)
 
@@ -67,6 +76,9 @@ class UserLogin(BaseModel):
     email: EmailStr
     password: str
 
+class TokenRequest(BaseModel):
+    refresh_token: str    
+
 # Хеширует пароль
 def hash_password(password: str) -> str:
     return pwd_context.hash(password)    
@@ -78,28 +90,24 @@ def verify_password(plain_password: str, hashed_password: str) -> bool:
 # Создает JWT-токен с заданными данными и временем жизни
 def create_access_token(data: dict, expires_delta: timedelta = None):
     to_encode = data.copy()
-    expire = datetime.utcnow() + (expires_delta or timedelta(minutes=15))
+    expire = datetime.now(tz=timezone.utc) + (expires_delta or timedelta(minutes=15))
     to_encode.update({"exp": expire})
     return jwt.encode(to_encode, SECRET_KEY, algorithm=ALGORITHM)
 
 # Получает текущего пользователя из токена
 def get_current_user(token: str = Depends(oauth2_scheme), db: Session = Depends(get_db)):
-    credentials_exception = HTTPException(
-        status_code=status.HTTP_401_UNAUTHORIZED,
-        detail="Невалидный токен",
-        headers={"WWW-Authenticate": "Bearer"},
-    )
     try:
         payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
-        email: str = payload.get("sub")
+        email = payload.get("sub")
         if email is None:
-            raise credentials_exception
+            raise HTTPException(status_code=401, detail="Невалидный токен")
     except JWTError:
-        raise credentials_exception
+        raise HTTPException(status_code=401, detail="Невалидный токен")
 
     user = db.query(User).filter(User.email == email).first()
-    if user is None:
-        raise credentials_exception
+    if not user:
+        raise HTTPException(status_code=401, detail="Пользователь не найден")
+
     return user
 
 # Проверяет валидность номера телефона
@@ -124,7 +132,7 @@ def register(user: UserCreate, db: Session = Depends(get_db)):
         first_name = user.first_name,
         last_name = user.last_name,
         email = user.email,
-        password = user.password,
+        phone_number=user.phone_number,
         password_hash = pwd_context.hash(user.password)
     )
 
@@ -137,47 +145,21 @@ def login(user: UserLogin, db: Session = Depends(get_db)):
     db_user = db.query(User).filter(User.email == user.email).first()
     if not db_user or not verify_password(user.password, db_user.password_hash):
         raise HTTPException(status_code=401, detail="Неверная почта или пароль")
-    
-    token = jwt.encode({"sub": user.email}, SECRET_KEY, algorithm=ALGORITHM)
-    return {"access_token": token, "token_type": "bearer"}
 
-# Загрузка аватарки пользователя
-@app.post("/upload-photo", status_code = 201)
-def upload_photo(
-    file: UploadFile = File(...),
-    current_user: User = Depends(get_current_user),
-    db: Session = Depends(get_db)
-):
-    # Проверяем расширение файла
-    allowed_extensions = {".jpg", ".jpeg", ".png"}
-    file_ext = os.path.splitext(file.filename)[1].lower()
-    if file_ext not in allowed_extensions:
-        raise HTTPException(status_code=415, detail="Недопустимый формат файла. Разрешены: jpg, jpeg, png")
+    # Access Token (короткоживущий)
+    access_token = create_access_token({"sub": db_user.email}, timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES))
 
-    # Проверяем размер файла (например, максимум 2 МБ)
-    file.file.seek(0, os.SEEK_END)
-    file_size = file.file.tell()
-    file.file.seek(0)
-    max_size = 2 * 1024 * 1024
-    if file_size > max_size:
-        raise HTTPException(status_code=413, detail="Файл слишком большой. Максимум 2 МБ.")
-
-    # Удаление старого фото, если есть
-    if current_user.photo_path:
-        old_path = current_user.photo_path.lstrip("/")
-        if os.path.exists(old_path):
-            os.remove(old_path)
-
-    filename = f"{uuid.uuid4().hex}{file_ext}"
-    file_path = os.path.join("static", "photos", filename)
-
-    with open(file_path, "wb") as buffer:
-        shutil.copyfileobj(file.file, buffer)
-
-    current_user.photo_path = f"/{file_path}"  # относительный URL с "/"
+    # Refresh Token (уникальный и хранится в БД)
+    refresh_token = str(uuid.uuid4())
+    db_token = RefreshToken(token=refresh_token, user_id=db_user.id)
+    db.add(db_token)
     db.commit()
 
-    return {"detail": "Фото успешно загружено"}
+    return {
+        "access_token": access_token,
+        "token_type": "bearer",
+        "refresh_token": refresh_token
+    }
 
 # Получение данных профиля текущего пользователя
 @app.get("/me")
@@ -193,6 +175,37 @@ def get_profile(request: Request, current_user: User = Depends(get_current_user)
         "email": current_user.email,
         "phone_number": current_user.phone_number,
         "photo_url": photo_url
+    }
+
+# Загрузка аватарки пользователя
+@app.post("/upload-photo", status_code = 201)
+async def upload_photo(
+    file: UploadFile = File(...),
+    db: Session = Depends(get_db),
+    user: User = Depends(get_current_user)
+):
+    if not file.content_type.startswith("image/"):
+        raise HTTPException(status_code=400, detail="Файл должен быть изображением")
+
+    upload_folder = "static/photos"
+    os.makedirs(upload_folder, exist_ok=True)
+
+    safe_email = user.email.replace("@", "_").replace(".", "_")
+    filename = f"{safe_email}_{file.filename}"
+    file_path = os.path.join(upload_folder, filename)
+
+    with open(file_path, "wb") as buffer:
+        shutil.copyfileobj(file.file, buffer)
+
+    # Обновляем путь к фото у пользователя
+    user.photo_path = f"/static/photos/{filename}"
+    db.add(user)
+    db.commit()
+
+    return {
+        "filename": filename,
+        "message": "Фото успешно загружено",
+        "photo_url": user.photo_path
     }
 
 # Обновление профиля пользователя
@@ -230,14 +243,34 @@ def update_profile(
 
     return {"detail": "Профиль успешно обновлён"}
 
-@router.post("/logout", status_code = 200)
-def logout(token: str = Depends(oauth2_scheme)):
-    if not token:
-        raise HTTPException(status_code=401, detail="Не прошел проверку подлинности")
-    return JSONResponse(content={"message": "Успешно вышли из системы"})
-
 # Возвращает URL карты города
 @app.get("/map")
-def get_map_url():
-    
-    return {"map_url": "/static/map/city_map.jpg"}
+def get_map_url(request: Request):
+    full_url = str(request.base_url)[:-1] + "/static/map/restaurant_map.jpg"
+    return {"map_url": full_url}
+
+@router.post("/logout", status_code = 200)
+def logout(payload: TokenRequest, db: Session = Depends(get_db)):
+    refresh_token = payload.refresh_token
+    token_entry = db.query(RefreshToken).filter(RefreshToken.token == refresh_token).first()
+    if not token_entry:
+        raise HTTPException(status_code=401, detail="Недействительный refresh токен")
+
+    db.delete(token_entry)
+    db.commit()
+    return {"message": "Вы успешно вышли из системы"}
+
+app.include_router(router)
+
+@app.post("/refresh")
+def refresh_token(refresh_token: str, db: Session = Depends(get_db)):
+    db_token = db.query(RefreshToken).filter(RefreshToken.token == refresh_token).first()
+    if not db_token:
+        raise HTTPException(status_code=401, detail="Недействительный refresh токен")
+
+    user = db.query(User).filter(User.id == db_token.user_id).first()
+    if not user:
+        raise HTTPException(status_code=401, detail="Пользователь не найден")
+
+    new_access_token = create_access_token({"sub": user.email}, timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES))
+    return {"access_token": new_access_token, "token_type": "bearer"}

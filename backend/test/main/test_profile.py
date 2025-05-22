@@ -27,7 +27,11 @@ def test_update_profile_name():
     token = get_token()
     response = client.put("/me", json={
         "first_name": "ОбновлённоеИмя",
-        "last_name": "ОбновлённаяФамилия"
+        "last_name": "ОбновлённаяФамилия",
+        "phone_number": "+79999999999",
+        "current_password": "testpassword",
+        "new_password": "newsecurepassword",
+        "confirm_new_password": "newsecurepassword"
     }, headers={"Authorization": f"Bearer {token}"})
     assert response.status_code == 200
     assert response.json()["detail"] == "Профиль успешно обновлён"

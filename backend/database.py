@@ -1,15 +1,14 @@
 from sqlalchemy import create_engine
-from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy.orm import declarative_base
 from sqlalchemy.orm import sessionmaker
 import os
 from dotenv import load_dotenv
 
 # Загружаем переменные окружения из .env файла
-load_dotenv()
+load_dotenv(dotenv_path = ".env")
 
 # Строка подключения к базе данных PostgreSQL
-# Формат: postgresql://<пользователь>:<пароль>@<хост>/<имя_бд>
-DATABASE_URL = "postgresql://fastapi_user:mypassword123@localhost/fastapi_db"
+DATABASE_URL = os.getenv("DATABASE_URL")
 
 # Создаём движок SQLAlchemy для подключения к базе данных
 engine = create_engine(DATABASE_URL)
