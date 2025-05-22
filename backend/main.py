@@ -9,7 +9,7 @@ from passlib.context import CryptContext
 from dotenv import load_dotenv
 import os
 from jose import jwt, JWTError
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 import shutil
 import uuid
 from typing import Optional
@@ -90,7 +90,7 @@ def verify_password(plain_password: str, hashed_password: str) -> bool:
 # Создает JWT-токен с заданными данными и временем жизни
 def create_access_token(data: dict, expires_delta: timedelta = None):
     to_encode = data.copy()
-    expire = datetime.utcnow() + (expires_delta or timedelta(minutes=15))
+    expire = datetime.now(tz=timezone.utc) + (expires_delta or timedelta(minutes=15))
     to_encode.update({"exp": expire})
     return jwt.encode(to_encode, SECRET_KEY, algorithm=ALGORITHM)
 
@@ -161,6 +161,22 @@ def login(user: UserLogin, db: Session = Depends(get_db)):
         "refresh_token": refresh_token
     }
 
+# Получение данных профиля текущего пользователя
+@app.get("/me")
+def get_profile(request: Request, current_user: User = Depends(get_current_user)):
+    # Формируем полный URL для фотографии, если она есть
+    photo_url = None
+    if current_user.photo_path:
+        photo_url = str(request.base_url)[:-1] + current_user.photo_path  # убираем последний слеш у base_url и добавляем путь
+
+    return {
+        "first_name": current_user.first_name,
+        "last_name": current_user.last_name,
+        "email": current_user.email,
+        "phone_number": current_user.phone_number,
+        "photo_url": photo_url
+    }
+
 # Загрузка аватарки пользователя
 @app.post("/upload-photo", status_code = 201)
 async def upload_photo(
@@ -190,22 +206,6 @@ async def upload_photo(
         "filename": filename,
         "message": "Фото успешно загружено",
         "photo_url": user.photo_path
-    }
-
-# Получение данных профиля текущего пользователя
-@app.get("/me")
-def get_profile(request: Request, current_user: User = Depends(get_current_user)):
-    # Формируем полный URL для фотографии, если она есть
-    photo_url = None
-    if current_user.photo_path:
-        photo_url = str(request.base_url)[:-1] + current_user.photo_path  # убираем последний слеш у base_url и добавляем путь
-
-    return {
-        "first_name": current_user.first_name,
-        "last_name": current_user.last_name,
-        "email": current_user.email,
-        "phone_number": current_user.phone_number,
-        "photo_url": photo_url
     }
 
 # Обновление профиля пользователя
@@ -243,6 +243,12 @@ def update_profile(
 
     return {"detail": "Профиль успешно обновлён"}
 
+# Возвращает URL карты города
+@app.get("/map")
+def get_map_url(request: Request):
+    full_url = str(request.base_url)[:-1] + "/static/map/restaurant_map.jpg"
+    return {"map_url": full_url}
+
 @router.post("/logout", status_code = 200)
 def logout(payload: TokenRequest, db: Session = Depends(get_db)):
     refresh_token = payload.refresh_token
@@ -255,12 +261,6 @@ def logout(payload: TokenRequest, db: Session = Depends(get_db)):
     return {"message": "Вы успешно вышли из системы"}
 
 app.include_router(router)
-
-# Возвращает URL карты города
-@app.get("/map")
-def get_map_url(request: Request):
-    full_url = str(request.base_url)[:-1] + "/static/map/restaurant_map.jpg"
-    return {"map_url": full_url}
 
 @app.post("/refresh")
 def refresh_token(refresh_token: str, db: Session = Depends(get_db)):
