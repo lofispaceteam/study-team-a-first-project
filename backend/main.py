@@ -110,7 +110,7 @@ def validate_phone(phone: str) -> bool:
     return bool(pattern.match(phone))
 
 # Регистрация нового пользователя
-@app.post('/Register', status_code = 201)
+@app.post('/register', status_code = 201)
 def register(user: UserCreate, db: Session = Depends(get_db)):
     if user.password != user.confirm_password:
         raise HTTPException(status_code = 422, detail = "Пароли не совпадают!")
@@ -133,7 +133,7 @@ def register(user: UserCreate, db: Session = Depends(get_db)):
     db.commit()
 
 # Авторизация пользователя
-@app.post("/Login", status_code = 201)
+@app.post("/login", status_code = 201)
 def login(user: UserLogin, db: Session = Depends(get_db)):
     db_user = db.query(User).filter(User.email == user.email).first()
     if not db_user or not verify_password(user.password, db_user.password_hash):
@@ -143,8 +143,12 @@ def login(user: UserLogin, db: Session = Depends(get_db)):
     return {"access_token": token, "token_type": "bearer"}
 
 # Загрузка аватарки пользователя
-@app.post("/Upload-photo", status_code = 201)
-async def upload_photo(file: UploadFile = File(...), user: dict = Depends(get_current_user)):
+@app.post("/upload-photo", status_code = 201)
+async def upload_photo(
+    file: UploadFile = File(...),
+    db: Session = Depends(get_db),
+    user: User = Depends(get_current_user)
+):
     if not file.content_type.startswith("image/"):
         raise HTTPException(status_code=400, detail="Файл должен быть изображением")
 
@@ -158,20 +162,19 @@ async def upload_photo(file: UploadFile = File(...), user: dict = Depends(get_cu
     with open(file_path, "wb") as buffer:
         shutil.copyfileobj(file.file, buffer)
 
-    # Ссылка на фото
-    photo_url = f"/static/photos/{filename}"
+    # Обновляем путь к фото у пользователя
+    user.photo_path = f"/static/photos/{filename}"
+    db.add(user)
+    db.commit()
 
-    return JSONResponse(
-        content={
-            "filename": filename,
-            "message": "Фото успешно загружено",
-            "photo_url": photo_url
-        },
-        status_code=201
-    )
+    return {
+        "filename": filename,
+        "message": "Фото успешно загружено",
+        "photo_url": user.photo_path
+    }
 
 # Получение данных профиля текущего пользователя
-@app.get("/Me")
+@app.get("/me")
 def get_profile(request: Request, current_user: User = Depends(get_current_user)):
     # Формируем полный URL для фотографии, если она есть
     photo_url = None
@@ -187,7 +190,7 @@ def get_profile(request: Request, current_user: User = Depends(get_current_user)
     }
 
 # Обновление профиля пользователя
-@app.put("/Me", status_code=200)
+@app.put("/me", status_code=200)
 def update_profile(
     user_update: UserUpdate,
     db: Session = Depends(get_db),
@@ -221,7 +224,7 @@ def update_profile(
 
     return {"detail": "Профиль успешно обновлён"}
 
-@router.post("/Logout", status_code = 200)
+@router.post("/logout", status_code = 200)
 def logout(token: str = Depends(oauth2_scheme)):
     if not token:
         raise HTTPException(status_code=401, detail="Не прошел проверку подлинности")
@@ -230,7 +233,7 @@ def logout(token: str = Depends(oauth2_scheme)):
 app.include_router(router)
 
 # Возвращает URL карты города
-@app.get("/Map")
+@app.get("/map")
 def get_map_url():
     
     return {"map_url": "/static/map/city_map.jpg"}
