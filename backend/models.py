@@ -3,11 +3,9 @@ from sqlalchemy.orm import relationship
 from datetime import datetime
 from database import Base
 
-# Модель пользователя для таблицы users в базе данных
 class User(Base):
-    __tablename__ = "users" # Название таблицы в базе данных
+    __tablename__ = "users" 
 
-    # Уникальный идентификатор пользователя (первичный ключ)
     id = Column(Integer, primary_key = True, index = True)
     
     first_name = Column(String, nullable = False)
